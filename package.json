@@ -11,6 +11,7 @@
     "core-js": "^3.6.5",
     "lodash.padstart": "^4.6.1",
     "lodash.partialright": "^4.2.1",
+    "uuid": "^8.3.2",
     "vue": "^2.6.11",
     "vuetify": "^2.4.0",
     "vuetify-dialog": "^2.0.14",

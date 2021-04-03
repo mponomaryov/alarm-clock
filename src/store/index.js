@@ -1,18 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import alarms from './alarms'
+import settings from './settings'
+
 Vue.use(Vuex)
 
-export default new Vuex.Store({
-    state: {
-    },
-
-    mutations: {
-    },
-
-    actions: {
-    },
-
+const store = new Vuex.Store({
     modules: {
-    }
+        alarms,
+        settings,
+    },
 })
+
+export default store
