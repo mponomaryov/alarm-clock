@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from 'vuex-persistedstate'
 
 import alarms from './alarms'
 import settings from './settings'
@@ -11,6 +12,10 @@ const store = new Vuex.Store({
         alarms,
         settings,
     },
+
+    plugins: [
+        createPersistedState(),
+    ],
 })
 
 export default store
