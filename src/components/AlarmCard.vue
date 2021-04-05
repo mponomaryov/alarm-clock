@@ -80,6 +80,8 @@
 </template>
 
 <script>
+import { mapGetters, mapMutations } from 'vuex'
+
 import DaysOfWeekSelector from '@/components/DaysOfWeekSelector'
 import TimePickerDialog from '@/components/TimePickerDialog'
 import { formatTime } from '@/helpers'
@@ -123,30 +125,85 @@ export default {
     }),
 
     methods: {
-        setTime() {
+        ...mapMutations([
+            'setAlarmTime',
+            'removeAlarm',
+            'toggleAlarmActivity',
+            'toggleAlarmRepeatability',
+            'setAlarmRepeatDays',
+            'setAlarmDescription',
+        ]),
+
+        async setTime() {
+            const result = await this.$dialog.showAndWait(TimePickerDialog, {
+                hour: this.alarm.hour,
+                minute: this.alarm.minute,
+                use24Hours: this.use24Hours,
+            })
+
+            if (result) {
+                try {
+                    const [hour, minute] = result
+
+                    this.setAlarmTime({
+                        id: this.alarm.id,
+                        hour,
+                        minute,
+                    })
+                } catch {
+                    /* empty */
+                }
+            }
         },
 
         toggleActivity() {
+            this.toggleAlarmActivity(this.alarm.id)
         },
 
         toggleRepeatability() {
+            this.toggleAlarmRepeatability(this.alarm.id)
         },
 
         setRepeatDays(days) {
+            this.setAlarmRepeatDays({
+                id: this.alarm.id,
+                repeatDays: days,
+            })
         },
 
-        setDescription() {
+        async setDescription() {
+            const result = await this.$dialog.prompt({
+                title: 'Set description',
+                text: 'Description',
+                value: this.alarm.description,
+                persistent: false,
+            })
+
+            if (result || result === '') {
+                this.setAlarmDescription({
+                    id: this.alarm.id,
+                    description: result,
+                })
+            }
         },
 
         remove() {
+            this.removeAlarm(this.alarm.id)
         },
     },
 
     computed: {
+        ...mapGetters([
+            'use24Hours',
+        ]),
+
         time() {
             const { hour, minute } = this.alarm
 
-            return formatTime(hour, minute)
+            return formatTime(hour, minute, {
+                use24Hours: this.use24Hours,
+                useAmPm: !this.use24Hours,
+            })
         },
 
         repeatDays() {
@@ -161,7 +218,7 @@ export default {
 
         alarmInfo() {
             let when
-            const { hour, minute, repeat, description} = this.alarm
+            const { hour, minute, repeat, description } = this.alarm
             const { currentHour, currentMinute } = this.$props
 
             if (repeat) {
