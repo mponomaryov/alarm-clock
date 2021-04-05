@@ -31,39 +31,58 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
+
 export default {
     name: 'SettingsDialog',
+
+    methods: {
+        ...mapMutations([
+            'setUse24Hours',
+            'setUseDarkTheme',
+            'setUseAnalogClock',
+            'setVolume',
+        ]),
+    },
 
     computed: {
         use24Hours: {
             get() {
+                return this.$store.getters.use24Hours
             },
 
             set(value) {
+                this.setUse24Hours(value)
             },
         },
 
         useDarkTheme: {
             get() {
+                return this.$store.getters.useDarkTheme
             },
 
             set(value) {
+                this.setUseDarkTheme(value)
             },
         },
 
         useAnalogClock: {
             get() {
+                return this.$store.getters.useAnalogClock
             },
 
             set(value) {
+                this.setUseAnalogClock(value)
             },
         },
 
         volume: {
             get() {
+                return this.$store.getters.volume
             },
 
             set(value) {
+                this.setVolume(value)
             },
         },
 
